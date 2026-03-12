@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "caption-generator"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "custom_logger @ git+https://github.com/jebin2/custom_logger.git",
+    "browser_manager @ git+https://github.com/jebin2/browser_manager.git",
+    "chat_bot_ui_handler @ git+https://github.com/jebin2/chat_bot_ui_handler.git",
+    "jebin_lib @ git+https://github.com/jebin2/lib.git",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
