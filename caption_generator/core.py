@@ -281,15 +281,15 @@ class MultiTypeCaptionGenerator:
                 neko_file_path = file_path
 
                 if source.__name__ in ("AIStudioUIChat", "QwenUIChat"):
-                    neko_base_path = "/".join(file_path.split("/")[:5])
-                    neko_file_path = "/".join(file_path.split("/")[5:])
+                    neko_base_path = os.path.abspath(os.path.dirname(file_path))
+                    neko_file_path = os.path.basename(file_path)
                     config.additionl_docker_flag = ' '.join(utils.get_docker_volume_mounts(config, neko_base_path))
 
                 self._thread_local.handler = source(config=config)
 
             neko_file_path = file_path
             if source.__name__ in ("AIStudioUIChat", "QwenUIChat"):
-                neko_file_path = "/".join(file_path.split("/")[5:])
+                neko_file_path = os.path.basename(file_path)
 
             result = self._thread_local.handler.chat_fresh(user_prompt=prompt, file_path=neko_file_path)
 
