@@ -9,6 +9,8 @@ from custom_logger import logger_config
 import threading
 import time
 from browser_manager.browser_config import BrowserConfig
+import asyncio as _asyncio
+import subprocess as _sp
 
 _log_lock = Lock()
 
@@ -22,7 +24,8 @@ class HandlerSkippedException(Exception):
 
 
 class MultiTypeCaptionGenerator:
-    def __init__(self, cache_path, sources, FYI="", skip_duration_seconds=100):
+    def __init__(self, frame_base_path, cache_path, sources, FYI="", skip_duration_seconds=100):
+        self.frame_base_path = frame_base_path
         self.cache_path = cache_path
         self.sources = sources
         self.num_types = len(self.sources) + 1
@@ -242,8 +245,9 @@ class MultiTypeCaptionGenerator:
         return extract_scenes_json
 
     def search_in_ui_type(self, type_id, prompt, file_path, thread_id):
-        import asyncio as _asyncio
-        import subprocess as _sp
+        file_path = utils.to_abs(file_path, self.frame_base_path)
+        neko_file_path = file_path
+        _log('info', file_path)
 
         handler_key = (type_id - 1) % len(self.sources)
 
@@ -278,7 +282,6 @@ class MultiTypeCaptionGenerator:
 
                 config = BrowserConfig()
                 config.docker_name = docker_name
-                neko_file_path = file_path
 
                 if source.__name__ in ("AIStudioUIChat", "QwenUIChat"):
                     neko_base_path = os.path.abspath(os.path.dirname(file_path))
